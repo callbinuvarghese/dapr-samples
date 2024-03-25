@@ -1,0 +1,108 @@
+➜  ~ colima start --kubernetes=false
+
+➜  ~ dapr uninstall --all
+ℹ️  Removing Dapr from your machine...
+⚠  WARNING: /Users/binu.b.varghese/.dapr/bin does not exist
+⚠  WARNING: dapr_placement container does not exist
+⚠  WARNING: dapr_redis container does not exist
+⚠  WARNING: dapr_zipkin container does not exist
+⚠  WARNING: /Users/binu.b.varghese/.dapr does not exist
+✅  Dapr has been removed successfully
+
+Z➜  ~ dapr init
+⌛  Making the jump to hyperspace...
+ℹ️  Container images will be pulled from Docker Hub
+ℹ️  Installing runtime version 1.13.0
+←  Downloading binaries and setting up components...
+Dapr runtime installed to /Users/binu.b.varghese/.dapr/bin, you may run the following to add it to your path if you want to run daprd directly:
+    export PATH=$PATH:/Users/binu.b.varghese/.dapr/bin
+✅  Downloading binaries and setting up components...
+✅  Downloaded binaries and completed components set up.
+ℹ️  daprd binary has been installed to /Users/binu.b.varghese/.dapr/bin.
+ℹ️  dapr_placement container is running.
+ℹ️  dapr_redis container is running.
+ℹ️  dapr_zipkin container is running.
+ℹ️  Use `docker ps` to check running containers.
+✅  Success! Dapr is up and running. To get started, go here: https://aka.ms/dapr-getting-started
+
+➜  ~
+
+  ~ docker context ls
+NAME        DESCRIPTION                               DOCKER ENDPOINT                                             KUBERNETES ENDPOINT                ORCHESTRATOR
+colima      colima                                    unix:///Users/binu.b.varghese/.colima/default/docker.sock
+default *   Current DOCKER_HOST based configuration   unix:///Users/binu.b.varghese/.colima/docker.sock           https://127.0.0.1:6443 (default)   swarm
+Warning: DOCKER_HOST environment variable overrides the active context. To use a context, either set the global --context flag, or unset DOCKER_HOST environment variable.
+➜  ~ docker ps
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS                   PORTS                                                                                                                                     NAMES
+8b727ebe2dc7   openzipkin/zipkin    "start-zipkin"           3 minutes ago   Up 3 minutes (healthy)   9410/tcp, 0.0.0.0:9411->9411/tcp, :::9411->9411/tcp                                                                                       dapr_zipkin
+e71f305c2aaf   daprio/dapr:1.13.0   "./placement"            3 minutes ago   Up 3 minutes             0.0.0.0:50005->50005/tcp, :::50005->50005/tcp, 0.0.0.0:58080->8080/tcp, :::58080->8080/tcp, 0.0.0.0:59090->9090/tcp, :::59090->9090/tcp   dapr_placement
+ff2c561d4ee3   redis:6              "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes             0.0.0.0:6379->6379/tcp, :::6379->6379/tcp                                                                                                 dapr_redis
+
+
+https://github.com/dapr/samples/tree/master/hello-dapr-slim
+git clone https://github.com/dapr/samples.git
+cd samples/hello-dapr-slim
+
+
+➜  hello-dapr-slim git:(master) ✗ dapr run --app-id nodeapp --app-port 3000 --dapr-http-port 3500 node app.js
+ℹ️  Starting Dapr with id nodeapp. HTTP Port: 3500. gRPC Port: 60237
+Flag --components-path has been deprecated, use --resources-path
+INFO[0000] Starting Dapr Runtime -- version 1.13.0 -- commit 5980602c57e360a3354d409be516b8ffc4056fd1  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Log level set to: info                        app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+WARN[0000] mTLS is disabled. Skipping certificate request and tls validation  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.security type=log ver=1.13.0
+WARN[0000] The default value for 'spec.metric.http.increasedCardinality' will change to 'false' in Dapr 1.14  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] standalone mode configured                    app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] app id: nodeapp                               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] metrics server started on :60238/             app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Dapr trace sampler initialized: DaprTraceSampler(P=1.000000)  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] local service entry announced: nodeapp -> 192.168.1.4:60239  app_id=nodeapp component="nr (mdns/v1)" instance=AMAC02CV6B6MD6R scope=dapr.contrib type=log ver=1.13.0
+INFO[0000] Initialized name resolution to mdns           app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Loading components…                           app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Component loaded: pubsub (pubsub.redis/v1)    app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.processor type=log ver=1.13.0
+INFO[0000] Waiting for all outstanding components to be processed…  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Using 'statestore' as actor state store       app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.processor.state type=log ver=1.13.0
+INFO[0000] Component loaded: statestore (state.redis/v1)  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.processor type=log ver=1.13.0
+INFO[0000] All outstanding components processed          app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Loading endpoints…                            app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Waiting for all outstanding http endpoints to be processed…  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] All outstanding http endpoints processed      app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] gRPC server listening on TCP address: :60237  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.api type=log ver=1.13.0
+INFO[0000] Enabled gRPC tracing middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.api type=log ver=1.13.0
+INFO[0000] Enabled gRPC metrics middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.api type=log ver=1.13.0
+INFO[0000] Registering workflow engine for gRPC endpoint: [::]:60237  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.api type=log ver=1.13.0
+INFO[0000] API gRPC server is running on port 60237      app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] Enabled max body size HTTP middleware with size 4 MB  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.http type=log ver=1.13.0
+INFO[0000] Enabled tracing HTTP middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.http type=log ver=1.13.0
+INFO[0000] Enabled metrics HTTP middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.http type=log ver=1.13.0
+INFO[0000] HTTP server listening on TCP address: :3500   app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.http type=log ver=1.13.0
+INFO[0000] HTTP server is running on port 3500           app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] The request body size parameter is: 4         app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] gRPC server listening on TCP address: :60239  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.internal type=log ver=1.13.0
+INFO[0000] Enabled gRPC tracing middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.internal type=log ver=1.13.0
+INFO[0000] Enabled gRPC metrics middleware               app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.grpc.internal type=log ver=1.13.0
+INFO[0000] Internal gRPC server is running on port 60239  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0000] application protocol: http. waiting on port 3000.  This will block until the app is listening on that port.  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+ℹ️  Updating metadata for appPID: 22123
+ℹ️  Updating metadata for app command: node app.js
+✅  You're up and running! Both Dapr and your app logs will appear here.
+
+== APP == Node App listening on port 3000!
+INFO[0001] application discovered on port 3000           app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0001] Application configuration loaded              app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0001] Configuring actors placement provider 'placement'. Configuration: 'placement:localhost:50005'  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.actor type=log ver=1.13.0
+INFO[0001] Configuring actor reminders provider 'default'. Configuration: ''  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.actor type=log ver=1.13.0
+INFO[0001] Actor runtime started. Actor idle timeout: 1h0m0s. Actor scan interval: 30s  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.actor type=log ver=1.13.0
+INFO[0001] Configuring workflow engine with actors backend  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0001] Registering component for dapr workflow engine...  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0001] Initializing Dapr workflow component          app_id=nodeapp component="dapr (workflow.dapr/v1)" instance=AMAC02CV6B6MD6R scope=dapr.contrib type=log ver=1.13.0
+INFO[0001] Workflow engine initialized.                  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0001] dapr initialized. Status: Running. Init Elapsed 1753ms  app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime type=log ver=1.13.0
+INFO[0002] Placement tables updated, version: 0          app_id=nodeapp instance=AMAC02CV6B6MD6R scope=dapr.runtime.actors.placement type=log ver=1.13.0
+
+
+➜  dapr invoke --verb POST --app-id nodeapp --method neworder --data '{"data": { "orderId": "42" } }'
+Got a new order! Order ID: 42
+✅  App invoked successfully
+
+➜   curl -X POST http://localhost:3500/v1.0/invoke/nodeapp/method/neworder -H "Content-Type: application/json" -d '{"data": { "orderId": "44" } }'
+Got a new order! Order ID: 44%
